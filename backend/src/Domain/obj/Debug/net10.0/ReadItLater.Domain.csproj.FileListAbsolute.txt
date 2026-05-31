@@ -1,0 +1,11 @@
+E:\Architechture\Read-it-Later\backend\src\Domain\bin\Debug\net10.0\ReadItLater.Domain.deps.json
+E:\Architechture\Read-it-Later\backend\src\Domain\bin\Debug\net10.0\ReadItLater.Domain.dll
+E:\Architechture\Read-it-Later\backend\src\Domain\bin\Debug\net10.0\ReadItLater.Domain.pdb
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\ReadItLater.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\ReadItLater.Domain.AssemblyInfoInputs.cache
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\ReadItLater.Domain.AssemblyInfo.cs
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\ReadItLater.Domain.csproj.CoreCompileInputs.cache
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\ReadItLater.Domain.dll
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\refint\ReadItLater.Domain.dll
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\ReadItLater.Domain.pdb
+E:\Architechture\Read-it-Later\backend\src\Domain\obj\Debug\net10.0\ref\ReadItLater.Domain.dll

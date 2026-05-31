@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "NswWRjmTv/I=",
+  "success": true,
+  "projectFilePath": "e:\\Architechture\\Read-it-Later\\backend\\src\\Api\\ReadItLater.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\htmlagilitypack\\1.12.4\\htmlagilitypack.1.12.4.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.2\\microsoft.aspnetcore.openapi.10.0.2.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
