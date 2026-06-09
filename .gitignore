@@ -483,3 +483,8 @@ $RECYCLE.BIN/
 # Local tooling and editor config
 .claude/
 .vscode/
+
+# App configuration (may contain secrets) - keep appsettings.Example.json as a committed template
+appsettings.json
+appsettings.*.json
+!appsettings.Example.json
