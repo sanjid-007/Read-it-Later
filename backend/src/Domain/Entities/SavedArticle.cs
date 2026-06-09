@@ -7,7 +7,7 @@ namespace Domain.Entities
 {
     public class SavedArticle
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public required string Url { get; set; }
         public required string Title { get; set; }
         public string? Content { get; set; }

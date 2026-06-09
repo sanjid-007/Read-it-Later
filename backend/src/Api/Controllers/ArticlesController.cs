@@ -14,22 +14,30 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     public class ArticlesController : ControllerBase
     {
-        private readonly IParseArticleMetadata _parseArticleMetadata;
+        private readonly IControlArticleMetadata _controlArticleMetadata;
 
-        public ArticlesController( IParseArticleMetadata parseArticleMetadata)
+        public ArticlesController( IControlArticleMetadata controlArticleMetadata)
         {
-            _parseArticleMetadata = parseArticleMetadata;
+            _controlArticleMetadata = controlArticleMetadata;
         }
        [HttpPost]
        public async Task<IActionResult> SaveArticle([FromBody] ArticleDto articleDto)
        {
-           var articleResponse = await _parseArticleMetadata.ParseMetadata(articleDto.Url);
-           if (articleResponse == null)
-           {
-               return BadRequest("Failed to parse article metadata.");
-           }
-           return Ok(articleResponse);
+           await _controlArticleMetadata.SaveArticleAsync(articleDto);
+
+           return Ok("Article saved successfully.");
        }
 
+       [HttpGet("{id}")]
+       public async Task<IActionResult> GetArticle(int id)
+       {
+           var articleResponse = await _controlArticleMetadata.GetArticleAsync(id);
+           if (articleResponse == null)
+           {
+               return NotFound("Article not found.");
+           }
+
+           return Ok(articleResponse);
+       }
     }
 }

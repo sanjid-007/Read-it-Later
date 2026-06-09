@@ -2,8 +2,21 @@
 using Business.Interfaces;
 using Business.Services;
 using Business.Constants;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Infrastructure.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped<IControlArticleMetadata, ControlArticleMetadata>();
 builder.Services.AddScoped<IParseArticleMetadata, ParseArticleMetadata>();
+
+
 builder.Services.AddHttpClient(HttpClientConstant.ArticleParser, client =>
 {
     client.Timeout = TimeSpan.FromSeconds(10);
