@@ -1,20 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+
 using Business.DTOs;
 using Business.Interfaces;
 using Business.Constants;
 using HtmlAgilityPack;
+using SmartReader;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+
 namespace Business.Services
 {
     public class ParseArticleMetadata : IParseArticleMetadata
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public ParseArticleMetadata(IHttpClientFactory httpClientFactory)
+        private readonly ILogger<ParseArticleMetadata> logger;
+        public ParseArticleMetadata(IHttpClientFactory httpClientFactory, ILogger<ParseArticleMetadata> logger)
         {
             _httpClientFactory = httpClientFactory;
+            this.logger = logger;
         }
 
         public async Task<ArticleResponse> ParseMetadata(string url)
@@ -30,17 +32,24 @@ namespace Business.Services
             var client = _httpClientFactory.CreateClient(HttpClientConstant.ArticleParser);
             try
             {
+                var stopwatch = Stopwatch.StartNew();
                 var response = await client.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
                     return null;
                 }
                 var content = await response.Content.ReadAsStringAsync();
+                logger.LogInformation($"Fetched content from {url} in {stopwatch.ElapsedMilliseconds} ms");
+                stopwatch.Restart();
                 var doc = new HtmlDocument();
                 doc.LoadHtml(content);
 
                 var title = ExtractTitle(doc);
-                var actualContent = ExtractContent(doc);
+
+
+                var actualContent = ExtractContent(url,content);
+                logger.LogInformation($"Extracted metadata from {url} in {stopwatch.ElapsedMilliseconds} ms");
+                stopwatch.Stop();
 
                 return new ArticleResponse
                 {
@@ -66,13 +75,19 @@ namespace Business.Services
 
             return ogTitle ?? titleTag ?? "Untitled";
         }
-        private string ExtractContent(HtmlDocument doc)
+        private string ExtractContent(string url, string content)
         {
-            var contentNode = doc.DocumentNode.SelectNodes("//p")
-                            ?.Select(node => node.InnerText.Trim())
-                            .Where(text => !string.IsNullOrEmpty(text))
-                            .ToList();
-            return string.Join("\n\n", contentNode ?? new List<string> { "No content available." });
+            try
+            {
+                var reader = new Reader(url, content);
+                var article = reader.GetArticle();
+                return article?.TextContent ?? "Content could not be extracted.";
+            }
+            
+            catch
+            {
+                return "Content could not be extracted.";
+            }
         }
     }
 }

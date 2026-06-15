@@ -17,20 +17,27 @@ namespace Infrastructure.Repository
     {
       _context = context;
     }
-    public async Task AddArticleAsync(ArticleResponse article)
+    public async Task<ArticleResponse?> AddArticleAsync(ArticleDto article)
         {
             var articleEntity = new SavedArticle
             {
                 Url = article.Url,
-                Title = article.Title,
-                Content = article.Content,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Status =  ArticleStatus.Pending
             };
             _context.Articles.Add(articleEntity);
             await _context.SaveChangesAsync();
+            return new ArticleResponse
+            {
+                Id = articleEntity.Id,
+                Url = articleEntity.Url,
+                Title = articleEntity.Title,
+                Content = articleEntity.Content,
+                Status = articleEntity.Status
+            };
         }
 
-    public async Task<ArticleResponse> GetArticleAsync(int id)
+    public async Task<ArticleResponse?> GetArticleAsync(int id)
     {
         var articleEntity = await _context.Articles.FirstOrDefaultAsync(a => a.Id == id);
         if (articleEntity == null)
@@ -42,7 +49,9 @@ namespace Infrastructure.Repository
         {
             Url = articleEntity.Url,
             Title = articleEntity.Title,
-            Content = articleEntity.Content
+            Content = articleEntity.Content,
+            Status = articleEntity.Status,
+            Id = articleEntity.Id
         };
 
         return articleResponse;

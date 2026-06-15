@@ -23,9 +23,9 @@ namespace Api.Controllers
        [HttpPost]
        public async Task<IActionResult> SaveArticle([FromBody] ArticleDto articleDto)
        {
-           await _controlArticleMetadata.SaveArticleAsync(articleDto);
+           var result = await _controlArticleMetadata.SaveArticleAsync(articleDto);
 
-           return Ok("Article saved successfully.");
+           return Ok(result);
        }
 
        [HttpGet("{id}")]

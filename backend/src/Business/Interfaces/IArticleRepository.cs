@@ -7,7 +7,7 @@ namespace Business.Interfaces
 {
     public interface IArticleRepository
     {
-        Task AddArticleAsync(ArticleResponse article);
-        Task<ArticleResponse> GetArticleAsync(int id);
+        Task<ArticleResponse?> AddArticleAsync(ArticleDto article);
+        Task<ArticleResponse?> GetArticleAsync(int id);
     }
 }

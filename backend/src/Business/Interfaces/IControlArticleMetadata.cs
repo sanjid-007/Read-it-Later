@@ -8,7 +8,7 @@ namespace Business.Interfaces
 {
     public interface IControlArticleMetadata
     {
-        Task SaveArticleAsync(ArticleDto article);
+        Task<ArticleResponse> SaveArticleAsync(ArticleDto article);
         Task<ArticleResponse> GetArticleAsync(int id);
     }
 }
