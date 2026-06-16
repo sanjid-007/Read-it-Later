@@ -56,5 +56,41 @@ namespace Infrastructure.Repository
 
         return articleResponse;
     }
+
+    public async Task<List<ArticleResponse>> GetPendingArticlesAsync()
+    {
+        return await _context.Articles
+            .Where(a => a.Status == ArticleStatus.Pending)
+            .Select(a => new ArticleResponse
+            {
+                Id = a.Id,
+                Url = a.Url,
+                Title = a.Title,
+                Content = a.Content,
+                Status = a.Status
+            })
+            .ToListAsync();
+    }
+
+    public async Task UpdateArticleAsync(int id, ArticleStatus status, string? title = null, string? content = null)
+    {
+        var articleEntity = await _context.Articles.FirstOrDefaultAsync(a => a.Id == id);
+        if (articleEntity == null)
+        {
+            return;
+        }
+
+        articleEntity.Status = status;
+        if (title != null)
+        {
+            articleEntity.Title = title;
+        }
+        if (content != null)
+        {
+            articleEntity.Content = content;
+        }
+
+        await _context.SaveChangesAsync();
+    }
   }
 }

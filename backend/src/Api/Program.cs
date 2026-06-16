@@ -16,6 +16,8 @@ builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IControlArticleMetadata, ControlArticleMetadata>();
 builder.Services.AddScoped<IParseArticleMetadata, ParseArticleMetadata>();
 
+builder.Services.AddHostedService<ArticleJob>();
+
 
 builder.Services.AddHttpClient(HttpClientConstant.ArticleParser, client =>
 {
