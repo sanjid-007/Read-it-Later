@@ -10,7 +10,9 @@ namespace Business.Interfaces
     {
         Task<ArticleResponse?> AddArticleAsync(ArticleDto article);
         Task<ArticleResponse?> GetArticleAsync(int id);
-        Task<List<ArticleResponse>> GetPendingArticlesAsync();
+        Task<List<ArticleResponse>> GetPendingArticlesAsync(int batchSize);
         Task UpdateArticleAsync(int id, ArticleStatus status, string? title = null, string? content = null);
+        Task<int> ConvertProcessingToPendingOnStartupAsync();
+        Task<bool> TryClaimAsync(int id);
     }
 }
