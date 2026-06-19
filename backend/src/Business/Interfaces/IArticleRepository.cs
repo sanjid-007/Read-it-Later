@@ -12,7 +12,11 @@ namespace Business.Interfaces
         Task<ArticleResponse?> GetArticleAsync(int id);
         Task<List<ArticleResponse>> GetPendingArticlesAsync(int batchSize);
         Task UpdateArticleAsync(int id, ArticleStatus status, string? title = null, string? content = null);
-        Task<int> ConvertProcessingToPendingOnStartupAsync();
-        Task<bool> TryClaimAsync(int id);
+        Task UpdateSummaryAsync(int id, SummaryStatus summaryStatus, string? summary = null);
+        Task<int> ConvertProcessingToPendingArticlesOnStartupAsync();
+        Task<int> ConvertProcessingToPendingSummariesOnStartupAsync();
+        Task<bool> TryClaimArticleAsync(int id);
+        Task<bool> TryClaimSummaryAsync(int id);
+        Task<List<ArticleResponse>> GetParsedArticlesAsync();
     }
 }

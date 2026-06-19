@@ -68,12 +68,11 @@ namespace Business.Services
                 {
                     break;
                 }
-                var won = await repository.TryClaimAsync(article.Id);
+                var won = await repository.TryClaimArticleAsync(article.Id);
                 if (!won)
                 {
                     continue;
                 }
-                await repository.UpdateArticleAsync(article.Id, ArticleStatus.Processing);
 
                 try
                 {
@@ -105,7 +104,7 @@ namespace Business.Services
         {
             using var scope = _scopeFactory.CreateScope();
             var repository = scope.ServiceProvider.GetRequiredService<IArticleRepository>();
-            var count = await repository.ConvertProcessingToPendingOnStartupAsync();
+            var count = await repository.ConvertProcessingToPendingArticlesOnStartupAsync();
             if (count > 0)
             {
                 _logger.LogInformation("Converted {Count} processing articles to pending", count);

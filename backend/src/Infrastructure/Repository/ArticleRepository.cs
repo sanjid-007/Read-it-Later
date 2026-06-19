@@ -29,7 +29,9 @@ namespace Infrastructure.Repository
                 Url = articleEntity.Url,
                 Title = articleEntity.Title,
                 Content = articleEntity.Content,
-                Status = articleEntity.Status
+                Status = articleEntity.Status,
+                Summary = articleEntity.Summary,
+                SummaryStatus = articleEntity.SummaryStatus
             };
         }
 
@@ -47,7 +49,9 @@ namespace Infrastructure.Repository
                 Title = articleEntity.Title,
                 Content = articleEntity.Content,
                 Status = articleEntity.Status,
-                Id = articleEntity.Id
+                Id = articleEntity.Id,
+                Summary = articleEntity.Summary,
+                SummaryStatus = articleEntity.SummaryStatus
             };
 
             return articleResponse;
@@ -65,7 +69,9 @@ namespace Infrastructure.Repository
                     Url = a.Url,
                     Title = a.Title,
                     Content = a.Content,
-                    Status = a.Status
+                    Status = a.Status,
+                    Summary = a.Summary,
+                    SummaryStatus = a.SummaryStatus
                 })
                 .ToListAsync();
         }
@@ -87,11 +93,25 @@ namespace Infrastructure.Repository
             {
                 articleEntity.Content = content;
             }
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateSummaryAsync(int id, SummaryStatus summaryStatus, string? summary = null)
+        {
+            var articleEntity = await _context.Articles.FirstOrDefaultAsync(a => a.Id == id);
+            if (articleEntity == null)
+            {
+                return;
+            }
 
+            articleEntity.SummaryStatus = summaryStatus;
+            if (summary != null)
+            {
+                articleEntity.Summary = summary;
+            }
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> ConvertProcessingToPendingOnStartupAsync()
+        public async Task<int> ConvertProcessingToPendingArticlesOnStartupAsync()
         {
             var processingArticles = await _context.Articles
                 .Where(a => a.Status == ArticleStatus.Processing)
@@ -105,14 +125,54 @@ namespace Infrastructure.Repository
             await _context.SaveChangesAsync();
             return processingArticles.Count;
         }
+        public async Task<int> ConvertProcessingToPendingSummariesOnStartupAsync()
+        {
+           var processingArticles = await _context.Articles
+                .Where(a => a.SummaryStatus == SummaryStatus.Processing)
+                .ToListAsync();
 
-        public async Task<bool> TryClaimAsync(int id)
+            foreach (var article in processingArticles)
+            {
+                article.SummaryStatus = SummaryStatus.NotStarted;
+            }
+
+            await _context.SaveChangesAsync();
+            return processingArticles.Count;
+        }
+
+        public async Task<bool> TryClaimArticleAsync(int id)
         {
             int rowsAffected = await _context.Articles
-                .Where(a => a.Id == id && a.Status == ArticleStatus.Pending)   
+                .Where(a => a.Id == id && a.Status == ArticleStatus.Pending)
                 .ExecuteUpdateAsync(s => s.SetProperty(a => a.Status, ArticleStatus.Processing));
 
             return rowsAffected == 1;
+        }
+        public async Task<bool> TryClaimSummaryAsync(int id)
+        {
+            int rowsAffected = await _context.Articles
+                .Where(a => a.Id == id && a.SummaryStatus == SummaryStatus.NotStarted)
+                .ExecuteUpdateAsync(s => s.SetProperty(a => a.SummaryStatus, SummaryStatus.Processing));
+
+            return rowsAffected == 1;
+        }
+
+        public async Task<List<ArticleResponse>> GetParsedArticlesAsync()
+        {
+            var parsedArticles = await _context.Articles
+                .Where(a => a.Status == ArticleStatus.Completed && a.SummaryStatus == SummaryStatus.NotStarted)
+                .ToListAsync();
+
+            return parsedArticles.Select(a => new ArticleResponse
+            {
+                Id = a.Id,
+                Url = a.Url,
+                Title = a.Title,
+                Content = a.Content,
+                Status = a.Status,
+                Summary = a.Summary,
+                SummaryStatus = a.SummaryStatus
+            }).ToList();
         }
     }
 }

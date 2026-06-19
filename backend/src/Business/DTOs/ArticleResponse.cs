@@ -13,6 +13,8 @@ namespace Business.DTOs
         public string? Title { get; set; }
         public string? Content { get; set; }
         public ArticleStatus Status { get; set; }
+        public string? Summary { get; set; }
+        public SummaryStatus SummaryStatus { get; set; }
         
     }
 }

@@ -12,6 +12,8 @@ namespace Domain.Entities
         public string? Title { get; set; }
         public string? Content { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string? Summary { get; set; }
+        public SummaryStatus SummaryStatus { get; set; }
 
         public ArticleStatus Status { get; set; }
 
@@ -19,6 +21,13 @@ namespace Domain.Entities
     public enum ArticleStatus
     {
         Pending,
+        Processing,
+        Completed,
+        Failed
+    }
+    public enum SummaryStatus
+    {
+        NotStarted,
         Processing,
         Completed,
         Failed
